@@ -29,8 +29,7 @@ parser.add_argument(
     '--mpd-playlist-dir',
     type=str,
     help="Path to mpd playlist directory. Optional")
-
-def real_main(args, logger):
+def main(args, logger):
     create_directory()
     ytdl = YoutubeDL({
         #        'quiet': True,
@@ -67,12 +66,10 @@ def real_main(args, logger):
     if new_elements > 0:
         logger.finish("{} new elements added".format(new_elements))
 
-
 args = parser.parse_args()
 logger = Logger(args.notify)
 try:
-    real_main(args, logger)
+    main(args, logger)
 except Exception as e:
-    print(e)
     logger.error(e)
-    exit(1)
+

@@ -5,7 +5,6 @@ import re
 import os
 csv_fields = ['title', 'upload_id', 'directory']
 playlist_dir = helpers.get_playlist_directory()
-print(playlist_dir)
 
 def read_playlist_file(path):
     try:
@@ -63,7 +62,7 @@ class SavedPlaylist:
         return playlist_copy
 
     def remove_failed(self, failed):
-        self.saved_playlist = helpers.remove_elements(saved_playlist, failed)
+        self.saved_playlist = helpers.remove_elements(self.saved_playlist, failed)
 
     def save_playlist_file(self):
         # List of paths that will be saving into mpd playlist, if user wants to

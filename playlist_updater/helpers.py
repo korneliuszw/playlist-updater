@@ -29,10 +29,12 @@ def path_to_file(directory, file_name):
 
 def create_directory():
     path = get_playlist_directory()
-    if not os.path.exists(path):
+    print(path)
+    if not os.path.isdir(path):
+        print('no lol')
         os.mkdir(path)
-    return path
-
+    else:
+        print('exists')
 
 class colors:
     HEADER = '\033[95m'
