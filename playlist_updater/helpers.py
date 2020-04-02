@@ -1,9 +1,6 @@
 import os
 import re
 
-def get_directory(path):
-    os.listdir(path)
-
 
 def get_playlist_directory():
     file_dir = os.path.dirname(os.path.realpath(__file__))
@@ -36,11 +33,7 @@ def is_youtube_playlist(playlist_url):
     return re.match(r"https://www.youtube.com/playlist\?list=", playlist_url)
 
 class colors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
     OKGREEN = '\033[92m'
     INFO = '\033[93m'
     FAIL = '\033[91m'
     ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
