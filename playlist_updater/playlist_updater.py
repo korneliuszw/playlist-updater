@@ -5,6 +5,8 @@ import os
 from playlist_file import SavedPlaylist
 from logger import Logger
 from helpers import create_directory
+import scrapper;
+
 parser = argparse.ArgumentParser(
     description='Download from youtube playlist that are not present in output folder')
 parser.add_argument(
@@ -32,7 +34,8 @@ parser.add_argument(
 def main(args, logger):
     create_directory()
     ytdl = YoutubeDL({
-        #        'quiet': True,
+        'quiet': True,
+        'prefer_insecure': True,
         'outtmpl': os.path.join(args.output_dir, '%(title)s.wav'),
         'format': 'bestaudio/best',
         'postprocessors': [{
@@ -42,16 +45,12 @@ def main(args, logger):
         'keepvideo': False
     })
     logger.info("Fetching playlist (this can take a while)")
-    playlist_info = ytdl.extract_info(args.playlist_url, download=False)
-    if len(playlist_info['entries']) == 0:
-        return logger.info("Your playlist is empty")
-    playlist = list(map(lambda x: {
-        "title": x["title"],
-        "upload_id": x["id"]
-    }, playlist_info['entries']))
-    saved_playlist = SavedPlaylist(playlist_info['title'], args.mpd_playlist_dir)
-    remaining_elements = saved_playlist.compare_playlists(
+    playlist_name, playlist = scrapper.get_playlist_details(args.playlist_url)
+    saved_playlist = SavedPlaylist(playlist_name.lstrip().rstrip(), args.mpd_playlist_dir)
+    removed_elements, remaining_elements = saved_playlist.compare_playlists(
         playlist, args.output_dir, args.keep_removed)
+    if (removed_elements > 0):
+        logger.info('{} elements were removed from playlist'.format(removed_elements))
     new_elements = len(remaining_elements)
     logger.info("Found {} new elements, downloading...".format(new_elements))
     for i in range(0, new_elements):

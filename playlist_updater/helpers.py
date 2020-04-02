@@ -1,5 +1,5 @@
 import os
-
+import re
 
 def get_directory(path):
     os.listdir(path)
@@ -29,12 +29,11 @@ def path_to_file(directory, file_name):
 
 def create_directory():
     path = get_playlist_directory()
-    print(path)
     if not os.path.isdir(path):
-        print('no lol')
         os.mkdir(path)
-    else:
-        print('exists')
+
+def is_youtube_playlist(playlist_url):
+    return re.match(r"https://www.youtube.com/playlist\?list=", playlist_url)
 
 class colors:
     HEADER = '\033[95m'

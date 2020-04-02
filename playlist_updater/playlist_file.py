@@ -25,7 +25,6 @@ def remove_files(files_dic):
         try:
             path = element['directory']
             path = path.replace('"', '\'')
-            print(path)
             os.remove(path + '.wav')
         except BaseException:
             pass
@@ -35,7 +34,6 @@ class SavedPlaylist:
     def __init__(self, playlist_name, mpd_playlist=None):
         self.fixed_name = get_playlist_file_name(playlist_name)
         self.path = helpers.path_to_file(playlist_dir, self.fixed_name)
-        print(self.path)
         self.saved_playlist = read_playlist_file(self.path)
         self.mpd_playlist_dir = mpd_playlist
     def compare_playlists(self, second_playlist, output_path, keep):
@@ -45,9 +43,8 @@ class SavedPlaylist:
         self.output_path = output_path
         if not saved_playlist:
             self.saved_playlist = second_playlist
-            return second_playlist
-        for i in range(0, len(second_playlist)):
-            element = second_playlist[i]
+            return (0, second_playlist)
+        for element in second_playlist:
             previous_element = helpers.find_dict(
                 saved_playlist, 'upload_id', element['upload_id'])
             if previous_element:
@@ -56,10 +53,9 @@ class SavedPlaylist:
         if not keep:
             self.saved_playlist = helpers.remove_elements(
                 self.saved_playlist, saved_playlist)
-            print(saved_playlist)
             remove_files(saved_playlist)
         self.saved_playlist = self.saved_playlist + playlist_copy
-        return playlist_copy
+        return (len(saved_playlist), playlist_copy)
 
     def remove_failed(self, failed):
         self.saved_playlist = helpers.remove_elements(self.saved_playlist, failed)
